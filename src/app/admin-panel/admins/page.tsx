@@ -2,9 +2,8 @@
 
 export const dynamic = "force-dynamic"
 
-
 import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 type UserRow = {
   id: string
@@ -14,18 +13,30 @@ type UserRow = {
 }
 
 export default function AdminsPage() {
+  const supabase = getSupabase()
+
   const [users, setUsers] = useState<UserRow[]>([])
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchCurrentUser()
-    fetchUsers()
+    const init = async () => {
+      await fetchCurrentUser()
+      await fetchUsers()
+    }
+
+    init()
   }, [])
 
   const fetchCurrentUser = async () => {
-    const { data } = await supabase.auth.getUser()
+    const { data, error } = await supabase.auth.getUser()
+
+    if (error) {
+      setError("Failed to get current user")
+      return
+    }
+
     if (data?.user) {
       setCurrentUserId(data.user.id)
     }
@@ -63,7 +74,7 @@ export default function AdminsPage() {
       return
     }
 
-    fetchUsers()
+    await fetchUsers()
   }
 
   return (

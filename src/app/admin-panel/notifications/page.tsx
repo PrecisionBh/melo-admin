@@ -2,11 +2,12 @@
 
 export const dynamic = "force-dynamic"
 
-
 import { useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 export default function NotificationsPage() {
+  const supabase = getSupabase()
+
   const [title, setTitle] = useState("")
   const [body, setBody] = useState("")
   const [loading, setLoading] = useState(false)

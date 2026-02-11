@@ -2,13 +2,13 @@
 
 export const dynamic = "force-dynamic"
 
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 export default function AdminLoginPage() {
   const router = useRouter()
+  const supabase = getSupabase()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -16,20 +16,15 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null)
 
   const handleLogin = async () => {
-    console.log("🔥 Login clicked")
     setLoading(true)
     setError(null)
 
     try {
-      console.log("➡️ Attempting login for:", email)
-
       const { data, error: authError } =
         await supabase.auth.signInWithPassword({
           email,
           password,
         })
-
-      console.log("🔐 Auth response:", data, authError)
 
       if (authError || !data?.session) {
         setLoading(false)
@@ -37,15 +32,11 @@ export default function AdminLoginPage() {
         return
       }
 
-      console.log("✅ Logged in user:", data.session.user.id)
-
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("is_admin")
         .eq("id", data.session.user.id)
         .single()
-
-      console.log("👤 Profile result:", profile, profileError)
 
       if (profileError) {
         setLoading(false)
@@ -60,11 +51,8 @@ export default function AdminLoginPage() {
         return
       }
 
-      console.log("🚀 Routing to admin panel")
       router.push("/admin-panel")
-
     } catch (err) {
-      console.error("💥 Unexpected error:", err)
       setError("Unexpected error occurred")
       setLoading(false)
     }

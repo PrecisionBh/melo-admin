@@ -2,9 +2,8 @@
 
 export const dynamic = "force-dynamic"
 
-
 import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 type Settings = {
   id: string
@@ -16,6 +15,8 @@ type Settings = {
 }
 
 export default function SettingsPage() {
+  const supabase = getSupabase()
+
   const [settings, setSettings] = useState<Settings | null>(null)
   const [loading, setLoading] = useState(false)
 

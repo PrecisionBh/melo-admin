@@ -2,7 +2,6 @@
 
 export const dynamic = "force-dynamic"
 
-
 import { useRouter } from "next/navigation"
 
 export default function AdminPanelPage() {

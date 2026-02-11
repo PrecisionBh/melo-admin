@@ -2,9 +2,8 @@
 
 export const dynamic = "force-dynamic"
 
-
 import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 type ListingRow = {
   id: string
@@ -16,6 +15,8 @@ type ListingRow = {
 }
 
 export default function ListingsPage() {
+  const supabase = getSupabase()
+
   const [listings, setListings] = useState<ListingRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

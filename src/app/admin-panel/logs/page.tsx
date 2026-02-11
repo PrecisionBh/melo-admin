@@ -2,9 +2,8 @@
 
 export const dynamic = "force-dynamic"
 
-
 import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 type LogRow = {
   id: string
@@ -15,6 +14,8 @@ type LogRow = {
 }
 
 export default function LogsPage() {
+  const supabase = getSupabase()
+
   const [logs, setLogs] = useState<LogRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

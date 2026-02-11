@@ -2,9 +2,8 @@
 
 export const dynamic = "force-dynamic"
 
-
 import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 type DisputeRow = {
   id: string
@@ -18,6 +17,8 @@ type DisputeRow = {
 }
 
 export default function DisputesPage() {
+  const supabase = getSupabase()
+
   const [disputes, setDisputes] = useState<DisputeRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
