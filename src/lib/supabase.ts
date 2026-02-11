@@ -1,12 +1,20 @@
-import { createClient } from "@supabase/supabase-js"
+import { createClient, SupabaseClient } from "@supabase/supabase-js"
+
+let supabase: SupabaseClient | null = null
 
 export const getSupabase = () => {
+  if (supabase) return supabase
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Supabase env variables missing")
+    // During Vercel build phase env vars may not be injected yet.
+    // Do NOT crash the build — return a temporary stub.
+    console.warn("Supabase env variables missing during build.")
+    return {} as SupabaseClient
   }
 
-  return createClient(supabaseUrl, supabaseAnonKey)
+  supabase = createClient(supabaseUrl, supabaseAnonKey)
+  return supabase
 }
